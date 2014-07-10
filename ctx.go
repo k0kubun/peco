@@ -75,6 +75,7 @@ type Ctx struct {
 	drawCh              chan []Match
 	statusMsgCh         chan string
 	pagingCh            chan PagingRequest
+	toggleRangeCh       chan bool
 	mutex               sync.Mutex
 	query               []rune
 	prompt              []rune
@@ -105,6 +106,7 @@ func NewCtx(o CtxOptions) *Ctx {
 		make(chan []Match, 5),       // drawCh.
 		make(chan string, 5),        // statusMsgCh
 		make(chan PagingRequest, 5), // pagingCh
+		make(chan bool),             // toggleRangeCh
 		sync.Mutex{},
 		[]rune{},
 		[]rune{},
@@ -210,6 +212,10 @@ func (c *Ctx) StatusMsgCh() chan string {
 
 func (c *Ctx) PagingCh() chan PagingRequest {
 	return c.pagingCh
+}
+
+func (c *Ctx) ToggleRangeCh() chan bool {
+	return c.toggleRangeCh
 }
 
 func (c *Ctx) Terminate() {

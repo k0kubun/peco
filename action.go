@@ -178,16 +178,7 @@ func doToggleSelection(i *Input, _ termbox.Event) {
 }
 
 func doToggleRangeMode(i *Input, _ termbox.Event) {
-	if i.IsRangeMode() {
-		for _, line := range i.SelectedRange() {
-			i.selection.Add(line)
-		}
-		i.selection.Add(i.currentLine)
-
-		i.selectionRangeStart = NoSelectionRange
-	} else {
-		i.selectionRangeStart = i.currentLine
-	}
+	i.ToggleRangeCh() <- true
 	i.DrawMatches(nil)
 }
 

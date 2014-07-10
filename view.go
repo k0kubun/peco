@@ -42,6 +42,8 @@ func (v *View) Loop() {
 			v.movePage(r)
 		case lines := <-v.DrawCh():
 			v.drawScreen(lines)
+		case <-v.ToggleRangeCh():
+			v.toggleRange()
 		}
 	}
 }
@@ -127,6 +129,19 @@ func (v *View) movePage(p PagingRequest) {
 		v.currentLine = 1
 	}
 	v.drawScreen(nil)
+}
+
+func (v *View) toggleRange() {
+	if v.IsRangeMode() {
+		for _, line := range v.SelectedRange() {
+			v.selection.Add(line)
+		}
+		v.selection.Add(v.currentLine)
+
+		v.selectionRangeStart = NoSelectionRange
+	} else {
+		v.selectionRangeStart = v.currentLine
+	}
 }
 
 func (v *View) drawScreen(targets []Match) {
